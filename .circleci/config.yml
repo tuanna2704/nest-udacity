@@ -5,34 +5,38 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  test:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  lint:
     docker:
-      - image: cimg/node:15.1
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          # See the configuration reference documentation for more details on using restore_cache and save_cache steps
-          # https://circleci.com/docs/2.0/configuration-reference/?section=reference#save_cache
-          keys:
-            - node-deps-v1-{{ .Branch }}-{{checksum "package-lock.json"}}
+          keys: [dependencies]
       - run:
-          name: install packages
-          command: npm ci
-      - save_cache:
-          key: node-deps-v1-{{ .Branch }}-{{checksum "package-lock.json"}}
-          paths:
-            - ~/.npm
+          name: Lint
+          command: |
+             npm run lint
+
+  build-and-push-docker-image:
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
-          name: Run Tests
-          command: npm run test
+          name: Build application Docker image
+          command: |
+            sudo docker build --no-cache -t tuanna2704/nest-udacity::${CIRCLE_SHA1} --tag=nest-example .
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+            docker push tuanna2704/nest-udacity::${CIRCLE_SHA1}
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  orb-free-workflow:
+  default:
     jobs:
-      - test
+      - install-frontend-dependencies
+      - lint:
+          requires: [master]
+      - build-and-push-docker-image:
+          requires: [lint]
