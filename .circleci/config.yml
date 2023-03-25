@@ -36,6 +36,5 @@ workflows:
   default:
     jobs:
       - lint:
-          requires: [master]
       - build-and-push-docker-image:
           requires: [lint]
