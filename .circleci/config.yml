@@ -35,7 +35,6 @@ jobs:
 workflows:
   default:
     jobs:
-      - install-frontend-dependencies
       - lint:
           requires: [master]
       - build-and-push-docker-image:

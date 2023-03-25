@@ -13,3 +13,7 @@ dockerpath="tuanna2704/nest-udacity:v1.0.0"
 sudo docker login
 sudo docker tag nest-example $dockerpath
 sudo docker push $dockerpath
+
+
+Github repository: https://@github.com/tuanna2704/nest-udacity.git
+Docker images repository: https://hub.docker.com/repository/docker/tuanna2704/nest-udacity/general
