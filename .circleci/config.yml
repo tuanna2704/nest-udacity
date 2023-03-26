@@ -68,7 +68,9 @@ jobs:
       - run:
           name: Deploy
           command: |
-            echo "Deploy to eks"
+            kubectl get nodes
+            kubectl create deploy nest-uda --image=tuanna2704/nest-udacity:${CIRCLE_SHA1}
+            kubectl get deploy,rs,svc,pods
 
 workflows:
   orb-free-workflow:

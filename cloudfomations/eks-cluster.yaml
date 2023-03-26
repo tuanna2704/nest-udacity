@@ -6,10 +6,10 @@ metadata:
   region: us-east-1
 managedNodeGroups:
   - name: nodegroup
-    instanceType: t2.micro
+    instanceType: t2.medium
     minSize: 1
-    maxSize: 2
-    desiredCapacity: 1
+    maxSize: 4
+    desiredCapacity: 3
     volumeSize: 20
     ssh:
       publicKeyName: udacity

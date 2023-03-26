@@ -23,4 +23,4 @@ Create cluster in EKS:
 eksctl create cluster -f cloudfomations/eks-cluster.yaml
 
 Delete Cluster EKS:
-eksctl delete cluster--name=capstone-cluster
+eksctl delete cluster --name=capstone-cluster
